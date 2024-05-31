@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "672412633824",
+    "project_id": "ecotodoapp",
+    "storage_bucket": "ecotodoapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672412633824:android:dc428a6d5fc80496f81e85",
+        "android_client_info": {
+          "package_name": "com.example.eco_to_do_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC08ppZ-cXpv13LV4u6Cl446qsj7U7_Gfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672412633824:android:34144d458e35e1fdf81e85",
+        "android_client_info": {
+          "package_name": "com.example.ecotodo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC08ppZ-cXpv13LV4u6Cl446qsj7U7_Gfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

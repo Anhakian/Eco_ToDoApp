@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"ecotodoapp","appId":"1:672412633824:android:dc428a6d5fc80496f81e85","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"ecotodoapp","configurations":{"android":"1:672412633824:android:dc428a6d5fc80496f81e85","ios":"1:672412633824:ios:879c1f0c27cd993df81e85"}}}}}}
