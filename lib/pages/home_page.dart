@@ -1,4 +1,5 @@
-import "package:eco_to_do_app/util/task_tile.dart";
+import "package:eco_to_do_app/components/my_drawer.dart";
+import "package:eco_to_do_app/components/task_tile.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 
@@ -28,16 +29,13 @@ class _HomePageState extends State<HomePage> {
               fontSize: 25,
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: logout,
-              icon: const Icon(
-                Icons.logout,
-                color: Colors.white,
-              ),
-            )
-          ],
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
         ),
+
+        // Drawer
+        drawer: const MyDrawer(),
 
         // Add Task Button
         floatingActionButton: FloatingActionButton(

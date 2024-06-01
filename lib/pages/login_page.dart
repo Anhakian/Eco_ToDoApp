@@ -1,6 +1,6 @@
 import "package:eco_to_do_app/components/my_textfield.dart";
 import "package:eco_to_do_app/helper/helper_functions.dart";
-import "package:eco_to_do_app/util/my_button.dart";
+import "package:eco_to_do_app/components/my_button.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 
