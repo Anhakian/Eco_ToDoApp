@@ -34,7 +34,9 @@ class _HomePageState extends State<HomePage> {
 
         // Add Task Button
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/add_task_page');
+          },
           child: const Icon(Icons.add),
         ),
 

@@ -1,6 +1,7 @@
 import 'package:eco_to_do_app/auth/auth.dart';
 import 'package:eco_to_do_app/auth/login_or_register.dart';
 import 'package:eco_to_do_app/firebase_options.dart';
+import 'package:eco_to_do_app/pages/add_task_page.dart';
 import 'package:eco_to_do_app/pages/home_page.dart';
 import 'package:eco_to_do_app/pages/profile_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
           '/login_register_page': (context) => const LoginOrRegister(),
           '/home_page': (context) => const HomePage(),
           '/profile_page': (context) => ProfilePage(),
+          '/add_task_page': (context) => AddTaskPage(),
         });
   }
 }
