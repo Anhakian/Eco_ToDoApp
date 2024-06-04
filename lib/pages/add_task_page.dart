@@ -11,6 +11,36 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   final TextEditingController taskController = TextEditingController();
+  DateTime date = DateTime.now();
+  TimeOfDay time = TimeOfDay.now();
+
+  void selectDate() {
+    showDatePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+      initialDate: DateTime.now(),
+    ).then(
+      (value) {
+        setState(() {
+          date = value!;
+        });
+      },
+    );
+  }
+
+  void selectTime() {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    ).then(
+      (value) {
+        setState(() {
+          time = value!;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +76,57 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.access_time,
                     size: 30,
+                  ),
+                  const SizedBox(
+                    width: 25.0,
+                  ),
+                  GestureDetector(
+                    onTap: selectDate,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        "${date.toLocal()}".split(' ')[0],
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 25.0,
+                  ),
+                  GestureDetector(
+                    onTap: selectTime,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        "${time.format(context)}",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               )
