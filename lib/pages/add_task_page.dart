@@ -1,3 +1,4 @@
+import 'package:eco_to_do_app/components/my_button.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final TextEditingController taskController = TextEditingController();
   DateTime date = DateTime.now();
   TimeOfDay time = TimeOfDay.now();
+  final List<String> repeatValues = ['None', 'Daily', 'Weekly', 'Monthly'];
+  String selectedRepeatValue = 'None';
 
   void selectDate() {
     showDatePicker(
@@ -45,93 +48,149 @@ class _AddTaskPageState extends State<AddTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          centerTitle: true,
-          title: const Text(
-            "ADD TASK",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 25,
-            ),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        centerTitle: true,
+        title: const Text(
+          "ADD TASK",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 25,
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: taskController,
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  hintText: "Add Task",
-                  hintStyle: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.normal,
-                  ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: taskController,
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                hintText: "Add Task",
+                hintStyle: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
-              const SizedBox(
-                height: 30,
+              style: const TextStyle(
+                fontSize: 25, // Adjust the font size as needed
               ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.access_time,
-                    size: 30,
-                  ),
-                  const SizedBox(
-                    width: 25.0,
-                  ),
-                  GestureDetector(
-                    onTap: selectDate,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey,
-                            width: 1.0,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        "${date.toLocal()}".split(' ')[0],
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              children: [
+                const Icon(
+                  Icons.access_time,
+                  size: 30,
+                ),
+                const SizedBox(
+                  width: 30.0,
+                ),
+                GestureDetector(
+                  onTap: selectDate,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.grey,
+                          width: 1.0,
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 25.0,
-                  ),
-                  GestureDetector(
-                    onTap: selectTime,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey,
-                            width: 1.0,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        "${time.format(context)}",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
-                        ),
+                    child: Text(
+                      "${date.toLocal()}".split(' ')[0],
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
                   ),
-                ],
-              )
-            ],
-          ),
-        ));
+                ),
+                const SizedBox(
+                  width: 30.0,
+                ),
+                GestureDetector(
+                  onTap: selectTime,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      time.format(context),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              children: [
+                const Text(
+                  "Repeat",
+                  style: TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
+                const SizedBox(
+                  width: 30.0,
+                ),
+                DropdownButton<String>(
+                  value: selectedRepeatValue,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedRepeatValue = newValue!;
+                    });
+                  },
+                  items: repeatValues.map(
+                    (String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight
+                                  .normal // Adjust the font size for dropdown items
+                              ),
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 30.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                MyButton(
+                  buttonText: 'Add Task',
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
