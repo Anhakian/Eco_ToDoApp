@@ -1,18 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Task {
   String id;
   String taskName;
-  DateTime taskDate;
-  TimeOfDay dueTime;
+  Timestamp taskDateTime;
   String repeatInterval;
+  bool completed;
+  String userEmail;
 
   Task({
     required this.id,
     required this.taskName,
-    required this.taskDate,
-    required this.dueTime,
+    required this.taskDateTime,
     required this.repeatInterval,
+    required this.completed,
+    required this.userEmail,
   });
 
   // Convert Task object to a map
@@ -20,23 +22,22 @@ class Task {
     return {
       'id': id,
       'taskName': taskName,
-      'taskDate': taskDate,
-      'dueTime': dueTime,
+      'taskDateTime': taskDateTime, // Store dueTime as Timestamp
       'repeatInterval': repeatInterval,
+      'completed': completed,
+      'userEmail': userEmail,
     };
   }
 
   // Convert the map to Task object
-  factory Task.fromMap(Map<String, dynamic> map) {
+  factory Task.mapToTask(Map<String, dynamic> map) {
     return Task(
       id: map['id'],
-      taskName: map['name'],
-      taskDate: DateTime.parse(map['date']),
-      dueTime: TimeOfDay(
-        hour: int.parse(map['time'].split(':')[0]),
-        minute: int.parse(map['time'].split(':')[1]),
-      ),
+      taskName: map['taskName'],
+      taskDateTime: map['taskDateTime'], // Convert from Timestamp
       repeatInterval: map['repeatInterval'],
+      completed: map['completed'],
+      userEmail: map['userEmail'],
     );
   }
 }

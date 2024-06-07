@@ -1,7 +1,9 @@
-import 'package:eco_to_do_app/components/my_button.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_to_do_app/components/my_button.dart';
+import 'package:eco_to_do_app/models/task.dart';
+import 'package:eco_to_do_app/services/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -12,22 +14,26 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   final TextEditingController taskController = TextEditingController();
-  DateTime date = DateTime.now();
-  TimeOfDay time = TimeOfDay.now();
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
   final List<String> repeatValues = ['None', 'Daily', 'Weekly', 'Monthly'];
   String selectedRepeatValue = 'None';
+
+  final FirestoreDatabase _firestoreDatabase = FirestoreDatabase();
 
   void selectDate() {
     showDatePicker(
       context: context,
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
-      initialDate: DateTime.now(),
+      initialDate: selectedDate,
     ).then(
       (value) {
-        setState(() {
-          date = value!;
-        });
+        if (value != null) {
+          setState(() {
+            selectedDate = value;
+          });
+        }
       },
     );
   }
@@ -35,14 +41,64 @@ class _AddTaskPageState extends State<AddTaskPage> {
   void selectTime() {
     showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: selectedTime,
     ).then(
       (value) {
-        setState(() {
-          time = value!;
-        });
+        if (value != null) {
+          setState(() {
+            selectedTime = value;
+          });
+        }
       },
     );
+  }
+
+  Future<void> addTaskToFirestore() async {
+    showDialog(
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    // Combine selectedDate and selectedTime into a single DateTime object
+    final taskDateTime = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedTime.minute,
+    );
+
+    // Convert taskDateTime to a Timestamp
+    final taskTimestamp = Timestamp.fromDate(taskDateTime);
+
+    // Retrieve current user's email
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String userEmail = user?.email ?? '';
+
+    // Create task ID
+    String taskId = _firestoreDatabase.tasks.doc().id;
+    Task task = Task(
+      id: taskId,
+      taskName: taskController.text,
+      taskDateTime: taskTimestamp,
+      repeatInterval: selectedRepeatValue,
+      completed: false,
+      userEmail: userEmail, // Set the email directly here
+    );
+
+    Map<String, dynamic> taskData = task.taskToMap();
+
+    try {
+      await FirebaseFirestore.instance.collection('Tasks').add(taskData);
+      print('Task added to Firestore successfully!');
+      print(task.userEmail);
+    } on FirebaseException catch (e) {
+      print('Error adding task to Firestore: $e');
+    } finally {
+      Navigator.of(context).pop(); // Close the loading dialog
+    }
   }
 
   @override
@@ -102,7 +158,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                     ),
                     child: Text(
-                      "${date.toLocal()}".split(' ')[0],
+                      "${selectedDate.toLocal()}".split(' ')[0],
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.normal,
@@ -126,7 +182,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                     ),
                     child: Text(
-                      time.format(context),
+                      selectedTime.format(context),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.normal,
@@ -165,10 +221,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         child: Text(
                           value,
                           style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight
-                                  .normal // Adjust the font size for dropdown items
-                              ),
+                              fontSize: 20, fontWeight: FontWeight.normal),
                         ),
                       );
                     },
@@ -183,8 +236,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 MyButton(
-                  buttonText: 'Add Task',
-                  onTap: () {},
+                  buttonText: 'Add',
+                  onTap: addTaskToFirestore,
                 ),
               ],
             ),
